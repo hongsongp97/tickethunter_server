@@ -6,5 +6,6 @@ services:
     volumes:
       - .:/go/src/github.com/hongsongp97/tickethunter_server
     ports:
-      - "8080:80"
+      # - "8080:80"
+      - "80:80"
     command: tail -F anything
