@@ -1,0 +1,10 @@
+version: "3"
+services:
+  server:
+    container_name: running_server
+    build: .
+    volumes:
+      - .:/go/src/github.com/hongsongp97/tickethunter_server
+    ports:
+      - "8080:80"
+    command: tail -F anything
