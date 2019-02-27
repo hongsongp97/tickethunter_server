@@ -2,10 +2,12 @@ package dao
 
 import (
 	"context"
-	"fmt" // . "github.com/hongsongp97/tickethunter_server/model"
+	"fmt"
+	"log"
 
+	. "github.com/hongsongp97/tickethunter_server/model"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"gopkg.in/mgo.v2/bson"
 )
 
 type UserDAO struct {
@@ -22,13 +24,35 @@ func (userDAO *UserDAO) Init() {
 }
 
 // Find list of users
-// func (userDAO *UserDAO) FindAll() ([]User, error) {
-// 	var users []User
+func (userDAO *UserDAO) FindAll() ([]User, error) {
+	var users []User
+	ctx := context.Background()
 
-// 	cur, err := userDAO.Collection.Find(context.Background(), bson.D{})
+	cur, err := userDAO.Collection.Find(ctx, bson.D{})
+	if err != nil {
+		// log.Fatal("fsnfjksdf")
+		return users, err
+	}
 
-// 	return users, err
-// }
+	defer cur.Close(context.Background())
+
+	for cur.Next(ctx) {
+		elem := &bson.D{}
+		if err := cur.Decode(elem); err != nil {
+			log.Fatal(err)
+			return users, err
+		}
+
+		log.Println(elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+		return users, err
+	}
+
+	return users, err
+}
 
 // Find a user by its id
 // func (ud *UserDAO) FindById(id string) (User, error) {
