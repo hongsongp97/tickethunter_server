@@ -17,15 +17,15 @@ const (
 	COLLECTION = "user"
 )
 
-func (userDAO *UserDAO) SetCollection() {
-	collection := userDAO.Dao.DatabaseHandle.Collection(COLLECTION)
-	userDAO.Collection = collection
+func (userDAO *UserDAO) Init() {
+	userDAO.Collection = userDAO.Dao.DatabaseHandle.Collection(COLLECTION)
 }
 
 // Find list of users
 // func (userDAO *UserDAO) FindAll() ([]User, error) {
 // 	var users []User
-// 	err := userDAO.Collection.Find(context.Background(), bson.M{}).All(&users)
+
+// 	cur, err := userDAO.Collection.Find(context.Background(), bson.D{})
 
 // 	return users, err
 // }

@@ -17,14 +17,15 @@ var dao = DAO{}
 var userDAO = UserDAO{}
 
 // GET list of users
-// func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
-// 	users, err := userDAO.FindAll()
-// 	if err != nil {
-// 		respondWithError(w, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-// 	respondWithJson(w, http.StatusOK, users)
-// }
+func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
+	// users, err := userDAO.FindAll()
+	// if err != nil {
+	// 	respondWithError(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// respondWithJson(w, http.StatusOK, users)
+	respondWithJson(w, http.StatusOK, "hehe")
+}
 
 // GET a user by its ID
 // func FindUserEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -100,19 +101,18 @@ func init() {
 
 	dao.Server = config.Server
 	dao.Database = config.Database
-	dao.Connect()
-	dao.GetDatabase()
+	dao.ConnectToDB()
 
 	userDAO.Dao = &dao
-	userDAO.SetCollection()
+	userDAO.Init()
 
-	userDAO.Insert()
+	// userDAO.Insert()
 }
 
 // Define HTTP request routes
 func main() {
 	r := mux.NewRouter()
-	// r.HandleFunc("/user", AllUserEndPoint).Methods("GET")
+	r.HandleFunc("/user", AllUserEndPoint).Methods("GET")
 	// r.HandleFunc("/user", CreateUserEndPoint).Methods("POST")
 	// r.HandleFunc("/user", UpdateUserEndPoint).Methods("PUT")
 	// r.HandleFunc("/user", DeleteUserEndPoint).Methods("DELETE")

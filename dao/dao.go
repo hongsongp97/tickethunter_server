@@ -15,9 +15,10 @@ type DAO struct {
 	DatabaseHandle *mongo.Database
 }
 
-func (dao *DAO) Connect() {
-	client, err := mongo.Connect(context.TODO(), dao.Server)
-	dao.Client = client
+func (dao *DAO) ConnectToDB() {
+	var err error
+
+	dao.Client, err = mongo.Connect(context.TODO(), dao.Server)
 
 	if err != nil {
 		log.Fatal(err)
@@ -31,6 +32,11 @@ func (dao *DAO) Connect() {
 	}
 
 	fmt.Println("Connected to MongoDB!")
+
+	// Get *DatabaseHandle
+	dao.DatabaseHandle = dao.Client.Database(dao.Database)
+
+	fmt.Printf("Connected to \"%s\" database.\n", dao.Database)
 }
 
 func (dao *DAO) Disconnect() {
@@ -39,12 +45,6 @@ func (dao *DAO) Disconnect() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println("Connection to MongoDB closed.")
-}
-
-func (dao *DAO) GetDatabase() {
-
-	dao.DatabaseHandle = dao.Client.Database(dao.Database)
-
-	fmt.Printf("Connected to \"%s\" database.\n", dao.Database)
 }
