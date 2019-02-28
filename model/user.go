@@ -1,8 +1,13 @@
 package model
 
 type User struct {
-	ID        uint   `json:"id,omitempty"`
-	Name      string `json:"firstname,omitempty"`
-	AvatarUrl string `json:"avatarUrl,omitempty"`
-	LoginType bool   `json:"loginType,omitempty"`
+	ID           string `bson:"_id,omitempty" json:"id"`
+	FirstName    string `bson:"first_name" json:"first_name"`
+	LastName     string `bson:"last_name" json:"last_name"`
+	UserName     string `bson:"user_name" json:"user_name"`
+	EmailAddress string `bson:"email" json:"email"`
+	Phone        string `bson:"phone" json:"phone"`
+	Address      string `bson:"address" json:"address"`
+	AvatarURL    string `bson:"avatar_url" json:"avatar_url"`
+	Description  string `bson:"description" json:"description"`
 }

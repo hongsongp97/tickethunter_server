@@ -7,9 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/config"
-	. "github.com/hongsongp97/tickethunter_server/dao"
-	// "gopkg.in/mgo.v2/bson"
-	// . "github.com/hongsongp97/tickethunter_server/model"
+	. "github.com/hongsongp97/tickethunter_server/dao" 
+	. "github.com/hongsongp97/tickethunter_server/model"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var config = Config{}
@@ -23,8 +23,9 @@ func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
 	// 	respondWithError(w, http.StatusInternalServerError, err.Error())
 	// 	return
 	// }
-	// respondWithJson(w, http.StatusOK, users)
-	respondWithJson(w, http.StatusOK, "hehe")
+	// user := User{FirstName: "Daniel", LastName: "Pham"}
+	// respondWithJson(w, http.StatusOK, user)
+	respondWithError(w, http.StatusInternalServerError, "Null response")
 }
 
 // GET a user by its ID
@@ -85,18 +86,24 @@ func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
 // }
 
 func respondWithError(w http.ResponseWriter, code int, msg string) {
-	respondWithJson(w, code, map[string]string{"error": msg})
+	response := ResponseJson{Status: code, Message: msg}
+	json.NewEncoder(w).Encode(response)
+	// respondWithJson(w, code, map[string]string{"error": msg})
 }
 
-func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
+func respondWithJson(w http.ResponseWriter, code int, data interface{}) {
+	response := ResponseJson{Status: code, Data: data}
+	json.NewEncoder(w).Encode(response)
+	// response, _ := json.Marshal(payload)
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(code)
+	// w.Write(response)
 }
 
 // Parse the configuration file 'config.toml', and establish a connection to DB
 func init() {
+	log.SetFlags(log.Lshortfile)
+
 	config.Read()
 
 	dao.Server = config.Server
@@ -106,7 +113,27 @@ func init() {
 	userDAO.Dao = &dao
 	userDAO.Init()
 
-	// userDAO.Insert()
+	user := User{
+		ID:        bson.NewObjectId().Hex(),
+		FirstName: "Son",
+		LastName:  "Pham"}
+
+	userDAO.Insert(user)
+
+	users, err := userDAO.FindAll()
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println(users)
+	}
+
+	// userId := "5c7786a6ded80f0719b2b1a1"
+	// err := userDAO.Delete(userId)
+	// if err != nil {
+	// 	log.Println(err)
+	// } else {
+	// 	log.Printf("Deleted %s successfully", userId)
+	// }
 }
 
 // Define HTTP request routes
