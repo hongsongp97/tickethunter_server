@@ -7,8 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/config"
-	. "github.com/hongsongp97/tickethunter_server/dao" // "gopkg.in/mgo.v2/bson"
+	. "github.com/hongsongp97/tickethunter_server/dao" 
 	. "github.com/hongsongp97/tickethunter_server/model"
+	"gopkg.in/mgo.v2/bson"
 )
 
 var config = Config{}
@@ -101,6 +102,8 @@ func respondWithJson(w http.ResponseWriter, code int, data interface{}) {
 
 // Parse the configuration file 'config.toml', and establish a connection to DB
 func init() {
+	log.SetFlags(log.Lshortfile)
+
 	config.Read()
 
 	dao.Server = config.Server
@@ -110,13 +113,27 @@ func init() {
 	userDAO.Dao = &dao
 	userDAO.Init()
 
+	user := User{
+		ID:        bson.NewObjectId().Hex(),
+		FirstName: "Son",
+		LastName:  "Pham"}
+
+	userDAO.Insert(user)
+
 	users, err := userDAO.FindAll()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	} else {
 		log.Println(users)
 	}
-	// userDAO.Insert()
+
+	// userId := "5c7786a6ded80f0719b2b1a1"
+	// err := userDAO.Delete(userId)
+	// if err != nil {
+	// 	log.Println(err)
+	// } else {
+	// 	log.Printf("Deleted %s successfully", userId)
+	// }
 }
 
 // Define HTTP request routes
