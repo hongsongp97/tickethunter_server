@@ -2,22 +2,26 @@ package utils
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
-	. "github.com/hongsongp97/tickethunter_server/model"
+	. "github.com/hongsongp97/tickethunter_server/models"
 )
 
-func respondWithError(w http.ResponseWriter, code int, msg string) {
+func RespondWithError(w http.ResponseWriter, code int, msg string) {
 	response := ResponseJson{Status: code, Message: msg}
-	json.NewEncoder(w).Encode(response)
-	// respondWithJson(w, code, map[string]string{"error": msg})
+	prettyRes, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		log.Println(err)
+	}
+	w.Write(prettyRes)
 }
 
 func RespondWithJson(w http.ResponseWriter, code int, data interface{}) {
 	response := ResponseJson{Status: code, Data: data}
-	json.NewEncoder(w).Encode(response)
-	// response, _ := json.Marshal(payload)
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(code)
-	// w.Write(response)
+	prettyRes, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		log.Println(err)
+	}
+	w.Write(prettyRes)
 }
