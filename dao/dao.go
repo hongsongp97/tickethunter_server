@@ -8,14 +8,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type DAO struct {
+type Dao struct {
 	Server         string
 	Database       string
 	Client         *mongo.Client
 	DatabaseHandle *mongo.Database
 }
 
-func (dao *DAO) ConnectToDB() {
+func (dao *Dao) ConnectToDB() {
 	var err error
 
 	dao.Client, err = mongo.Connect(context.TODO(), dao.Server)
@@ -39,7 +39,7 @@ func (dao *DAO) ConnectToDB() {
 	fmt.Printf("Connected to \"%s\" database.\n", dao.Database)
 }
 
-func (dao *DAO) Disconnect() {
+func (dao *Dao) Disconnect() {
 	err := dao.Client.Disconnect(context.TODO())
 
 	if err != nil {

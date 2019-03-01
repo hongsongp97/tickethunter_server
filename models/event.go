@@ -1,4 +1,4 @@
-package model
+package models
 
 type Event struct {
 	ID           uint   `json:"id,omitempty"`
