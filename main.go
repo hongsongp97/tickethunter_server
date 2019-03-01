@@ -7,7 +7,8 @@ import (
 
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/config"
-	. "github.com/hongsongp97/tickethunter_server/dao" 
+	. "github.com/hongsongp97/tickethunter_server/controller"
+	. "github.com/hongsongp97/tickethunter_server/dao"
 	. "github.com/hongsongp97/tickethunter_server/model"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -139,7 +140,9 @@ func init() {
 // Define HTTP request routes
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/user", AllUserEndPoint).Methods("GET")
+	r.HandleFunc("/getAllUsers", getAllUsers(dao)).Methods("GET")
+
+	//r.HandleFunc("/user", AllUserEndPoint).Methods("GET")
 	// r.HandleFunc("/user", CreateUserEndPoint).Methods("POST")
 	// r.HandleFunc("/user", UpdateUserEndPoint).Methods("PUT")
 	// r.HandleFunc("/user", DeleteUserEndPoint).Methods("DELETE")
