@@ -1,7 +1,5 @@
-package model
+package models
 
-// Represents a movie, we uses bson keyword to tell the mgo driver how to name
-// the properties in mongodb document
 type User struct {
 	ID           string `bson:"_id,omitempty" json:"id"`
 	FirstName    string `bson:"first_name" json:"first_name"`

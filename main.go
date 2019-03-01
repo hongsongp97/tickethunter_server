@@ -7,18 +7,18 @@ import (
 
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/config"
-	. "github.com/hongsongp97/tickethunter_server/dao" 
-	. "github.com/hongsongp97/tickethunter_server/model"
-	"gopkg.in/mgo.v2/bson"
+	. "github.com/hongsongp97/tickethunter_server/controllers"
+	. "github.com/hongsongp97/tickethunter_server/dao"
+	. "github.com/hongsongp97/tickethunter_server/models"
 )
 
 var config = Config{}
-var dao = DAO{}
-var userDAO = UserDAO{}
+var dao = Dao{}
+var userController = UserController{}
 
 // GET list of users
 func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
-	// users, err := userDAO.FindAll()
+	// users, err := userDao.FindAll()
 	// if err != nil {
 	// 	respondWithError(w, http.StatusInternalServerError, err.Error())
 	// 	return
@@ -31,7 +31,7 @@ func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
 // GET a user by its ID
 // func FindUserEndpoint(w http.ResponseWriter, r *http.Request) {
 // 	params := mux.Vars(r)
-// 	user, err := userDAO.FindById(params["id"])
+// 	user, err := userDao.FindById(params["id"])
 // 	if err != nil {
 // 		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
 // 		return
@@ -48,7 +48,7 @@ func AllUserEndPoint(w http.ResponseWriter, r *http.Request) {
 // 		return
 // 	}
 // 	user.ID = bson.NewObjectId()
-// 	if err := userDAO.Insert(user); err != nil {
+// 	if err := userDao.Insert(user); err != nil {
 // 		respondWithError(w, http.StatusInternalServerError, err.Error())
 // 		return
 // 	}
@@ -110,25 +110,28 @@ func init() {
 	dao.Database = config.Database
 	dao.ConnectToDB()
 
-	userDAO.Dao = &dao
-	userDAO.Init()
+	// userDao.Dao = &dao
+	// userDao.Init()
 
-	user := User{
-		ID:        bson.NewObjectId().Hex(),
-		FirstName: "Son",
-		LastName:  "Pham"}
+	// user := User{
+	// 	ID:        bson.NewObjectId().Hex(),
+	// 	FirstName: "Son",
+	// 	LastName:  "Pham"}
 
-	userDAO.Insert(user)
+	// userDao.Insert(user)
 
-	users, err := userDAO.FindAll()
-	if err != nil {
-		log.Println(err)
-	} else {
-		log.Println(users)
-	}
+	// users, err := userDao.FindAll()
+	// if err != nil {
+	// 	log.Println(err)
+	// } else {
+	// 	log.Println(users)
+	// }
+
+	userController.Init(&dao)
+	// userController.GetUsers()
 
 	// userId := "5c7786a6ded80f0719b2b1a1"
-	// err := userDAO.Delete(userId)
+	// err := userDao.Delete(userId)
 	// if err != nil {
 	// 	log.Println(err)
 	// } else {
@@ -139,7 +142,9 @@ func init() {
 // Define HTTP request routes
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/user", AllUserEndPoint).Methods("GET")
+	// r.HandleFunc("/getAllUsers", controller.GetAllUsers(dao)).Methods("GET")
+
+	r.HandleFunc("/user", userController.GetAllUsers).Methods("GET")
 	// r.HandleFunc("/user", CreateUserEndPoint).Methods("POST")
 	// r.HandleFunc("/user", UpdateUserEndPoint).Methods("PUT")
 	// r.HandleFunc("/user", DeleteUserEndPoint).Methods("DELETE")
