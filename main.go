@@ -145,10 +145,10 @@ func main() {
 	// r.HandleFunc("/getAllUsers", controller.GetAllUsers(dao)).Methods("GET")
 
 	r.HandleFunc("/user", userController.GetAllUsers).Methods("GET")
-	// r.HandleFunc("/user", CreateUserEndPoint).Methods("POST")
-	// r.HandleFunc("/user", UpdateUserEndPoint).Methods("PUT")
-	// r.HandleFunc("/user", DeleteUserEndPoint).Methods("DELETE")
-	// r.HandleFunc("/user/{id}", FindUserEndpoint).Methods("GET")
+	r.HandleFunc("/user", userController.AddUser).Methods("POST")
+	r.HandleFunc("/user", userController.UpdateUser).Methods("PUT")
+	r.HandleFunc("/user", userController.DeleteUserById).Methods("DELETE")
+	r.HandleFunc("/user/{id}", userController.GetUserById).Methods("GET")
 	if err := http.ListenAndServe(":80", r); err != nil {
 		log.Fatal(err)
 	}
