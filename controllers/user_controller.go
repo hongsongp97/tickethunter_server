@@ -47,6 +47,7 @@ func (userController *UserController) GetAllUsers(w http.ResponseWriter, r *http
 // GetUserById() is used to get a user record by it's ID.
 func (userController *UserController) GetUserById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
+	log.Println(params["id"])
 	user, err := userController.UserDao.FindById(params["id"])
 	if err != nil {
 		utils.RespondWithError(w, http.StatusBadRequest, "Cannot get user data!")

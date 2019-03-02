@@ -61,7 +61,7 @@ func (userDao *UserDao) FindById(id string) (User, error) {
 	var user User
 	ctx := context.Background()
 
-	cur, err := userDao.Collection.Find(ctx, bson.D{})
+	cur, err := userDao.Collection.Find(ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Println(err)
 		return user, err
