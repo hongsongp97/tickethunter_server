@@ -5,6 +5,7 @@ run:
 	docker exec -it running_server tickethunter_server
 
 re-run:
+	docker exec -it running_server go get -d -v ./...      
 	docker exec -it running_server go install -v ./...
 	make run
 

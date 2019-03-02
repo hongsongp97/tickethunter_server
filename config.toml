@@ -1,2 +1,4 @@
+host=""
+port=":80"
 server="mongodb://tickethunter:Abc123@cluster0-shard-00-00-jy8bp.gcp.mongodb.net:27017,cluster0-shard-00-01-jy8bp.gcp.mongodb.net:27017,cluster0-shard-00-02-jy8bp.gcp.mongodb.net:27017/admin?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
 database="demodb"
