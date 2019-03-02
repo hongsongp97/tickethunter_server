@@ -33,7 +33,7 @@ func (userDao *UserDao) FindAll() ([]User, error) {
 
 	cur, err := userDao.Collection.Find(ctx, bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -42,14 +42,14 @@ func (userDao *UserDao) FindAll() ([]User, error) {
 	for cur.Next(ctx) {
 		user := &User{}
 		if err := cur.Decode(user); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return nil, err
 		}
 		users = append(users, *user)
 	}
 
 	if err := cur.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return nil, err
 	}
 
@@ -63,7 +63,7 @@ func (userDao *UserDao) FindById(id string) (User, error) {
 
 	cur, err := userDao.Collection.Find(ctx, bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return user, err
 	}
 
@@ -71,13 +71,13 @@ func (userDao *UserDao) FindById(id string) (User, error) {
 
 	if cur.Next(ctx) {
 		if err := cur.Decode(&user); err != nil {
-			log.Fatal(err)
+			log.Println(err)
 			return user, err
 		}
 	}
 
 	if err := cur.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return user, err
 	}
 
@@ -88,7 +88,7 @@ func (userDao *UserDao) FindById(id string) (User, error) {
 func (userDao *UserDao) Insert(user User) error {
 	res, err := userDao.Collection.InsertOne(context.Background(), user)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	id := res.InsertedID
@@ -101,7 +101,7 @@ func (userDao *UserDao) Delete(userId string) error {
 	ctx := context.Background()
 	res, err := userDao.Collection.DeleteOne(ctx, bson.M{"_id": userId})
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if (*res).DeletedCount == 0 {
 		err = errors.New("No matched record!")
@@ -110,7 +110,18 @@ func (userDao *UserDao) Delete(userId string) error {
 }
 
 // Update an existing user
-// func (ud *UserDao) Update(user User) error {
-// err := db.C(COLLECTION).UpdateId(user.ID, &user)
-// return err
-// }
+func (userDao *UserDao) Update(user User) error {
+	ctx := context.Background()
+
+	data := bson.D{{"$set", user}}
+
+	log.Println(bson.M{"_id": user.ID})
+	res, err := userDao.Collection.UpdateOne(ctx, bson.M{"_id": user.ID}, data)
+	if err != nil {
+		log.Println(err)
+	}
+	if (*res).MatchedCount == 0 {
+		err = errors.New("No matched record!")
+	}
+	return err
+}
