@@ -20,9 +20,10 @@ const (
 	USER_COLLECTION = "user"
 )
 
-func (userDao *UserDao) Init() {
+func (userDao *UserDao) Init(dao *Dao) {
 	log.SetFlags(log.Lshortfile)
 
+	userDao.Dao = dao
 	userDao.Collection = userDao.Dao.DatabaseHandle.Collection(USER_COLLECTION)
 }
 

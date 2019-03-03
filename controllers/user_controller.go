@@ -25,8 +25,8 @@ type UserController struct {
 func (userController *UserController) Init(dao *Dao) {
 	log.SetFlags(log.Lshortfile)
 
-	userController.UserDao = UserDao{Dao: dao}
-	userController.UserDao.Init()
+	//userController.UserDao = UserDao{Dao: dao}
+	userController.UserDao.Init(dao)
 }
 
 // GetAllUsers() is used to get all users record.

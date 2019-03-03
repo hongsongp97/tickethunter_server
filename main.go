@@ -34,6 +34,7 @@ func main() {
 
 	// Set routers
 	routers.SetUserRouter(route, &dao)
+	routers.SetEventRouter(route, &dao)
 
 	if err := http.ListenAndServe(config.Host+config.Port, route); err != nil {
 		log.Fatal(err)
