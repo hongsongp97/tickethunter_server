@@ -86,8 +86,8 @@ func (eventDao *EventDao) FindById(id string) (Event, error) {
 }
 
 // Insert a user into database
-func (eventDao *EventDao) Insert(user User) error {
-	res, err := eventDao.Collection.InsertOne(context.Background(), user)
+func (eventDao *EventDao) Insert(event Event) error {
+	res, err := eventDao.Collection.InsertOne(context.Background(), event)
 	if err != nil {
 		log.Println(err)
 		return err
