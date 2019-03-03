@@ -66,8 +66,8 @@ func (userController *UserController) AddUser(w http.ResponseWriter, r *http.Req
 		log.Println(err)
 		return
 	}
-	if user.Id == "" {
-		user.Id = bson.NewObjectId().Hex()
+	if user.ID == "" {
+		user.ID = bson.NewObjectId().Hex()
 	}
 	if err := userController.UserDao.Insert(user); err != nil {
 		utils.RespondWithError(w, http.StatusBadRequest, "Cannot add new user!")
