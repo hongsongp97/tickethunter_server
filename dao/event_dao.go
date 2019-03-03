@@ -11,27 +11,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type UserDao struct {
+type EventDao struct {
 	Dao        *Dao
 	Collection *mongo.Collection
 }
 
 const (
-	USER_COLLECTION = "user"
+	EVENT_COLLECTION = "event"
 )
 
-func (userDao *UserDao) Init() {
+func (eventDao *EventDao) Init() {
 	log.SetFlags(log.Lshortfile)
 
-	userDao.Collection = userDao.Dao.DatabaseHandle.Collection(USER_COLLECTION)
+	eventDao.Collection = eventDao.Dao.DatabaseHandle.Collection(EVENT_COLLECTION)
 }
 
-// Find list of users
-func (userDao *UserDao) FindAll() ([]User, error) {
-	var users []User
+// Find list of events
+func (eventDao *EventDao) FindAll() ([]Event, error) {
+	var events []Event
 	ctx := context.Background()
 
-	cur, err := userDao.Collection.Find(ctx, bson.D{})
+	cur, err := eventDao.Collection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -40,12 +40,12 @@ func (userDao *UserDao) FindAll() ([]User, error) {
 	defer cur.Close(context.Background())
 
 	for cur.Next(ctx) {
-		user := &User{}
-		if err := cur.Decode(user); err != nil {
+		event := &Event{}
+		if err := cur.Decode(event); err != nil {
 			log.Println(err)
 			return nil, err
 		}
-		users = append(users, *user)
+		events = append(events, *event)
 	}
 
 	if err := cur.Err(); err != nil {
@@ -53,40 +53,40 @@ func (userDao *UserDao) FindAll() ([]User, error) {
 		return nil, err
 	}
 
-	return users, nil
+	return events, nil
 }
 
 // Find a user by its id
-func (userDao *UserDao) FindById(id string) (User, error) {
-	var user User
+func (eventDao *EventDao) FindById(id string) (Event, error) {
+	var event Event
 	ctx := context.Background()
 
-	cur, err := userDao.Collection.Find(ctx, bson.M{"_id": id})
+	cur, err := eventDao.Collection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Println(err)
-		return user, err
+		return event, err
 	}
 
 	defer cur.Close(context.Background())
 
 	if cur.Next(ctx) {
-		if err := cur.Decode(&user); err != nil {
+		if err := cur.Decode(&event); err != nil {
 			log.Println(err)
-			return user, err
+			return event, err
 		}
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Println(err)
-		return user, err
+		return event, err
 	}
 
-	return user, nil
+	return event, nil
 }
 
 // Insert a user into database
-func (userDao *UserDao) Insert(user User) error {
-	res, err := userDao.Collection.InsertOne(context.Background(), user)
+func (eventDao *EventDao) Insert(user User) error {
+	res, err := eventDao.Collection.InsertOne(context.Background(), user)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -97,9 +97,9 @@ func (userDao *UserDao) Insert(user User) error {
 }
 
 // Delete an existing user
-func (userDao *UserDao) Delete(userId string) error {
+func (eventDao *EventDao) Delete(eventId string) error {
 	ctx := context.Background()
-	res, err := userDao.Collection.DeleteOne(ctx, bson.M{"_id": userId})
+	res, err := eventDao.Collection.DeleteOne(ctx, bson.M{"_id": eventId})
 	if err != nil {
 		log.Println(err)
 	}
@@ -110,13 +110,13 @@ func (userDao *UserDao) Delete(userId string) error {
 }
 
 // Update an existing user
-func (userDao *UserDao) Update(user User) error {
+func (eventDao *EventDao) Update(event Event) error {
 	ctx := context.Background()
 
-	data := bson.D{{"$set", user}}
+	data := bson.D{{"$set", event}}
 
-	log.Println(bson.M{"_id": user.Id})
-	res, err := userDao.Collection.UpdateOne(ctx, bson.M{"_id": user.Id}, data)
+	log.Println(bson.M{"_id": event.Id})
+	res, err := eventDao.Collection.UpdateOne(ctx, bson.M{"_id": event.Id}, data)
 	if err != nil {
 		log.Println(err)
 	}
