@@ -1,11 +1,13 @@
 /*
-controllers is packages 
+controllers is packages
 */
 package controllers
 
 import (
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	. "github.com/hongsongp97/tickethunter_server/dao"
 	. "github.com/hongsongp97/tickethunter_server/models"
@@ -23,6 +25,10 @@ func (userController *UserController) Init(dao *Dao) {
 	log.SetFlags(log.Lshortfile)
 }
 
+func HandlingResponseErrorWithJson(err error) {
+
+}
+
 func (userController *UserController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	var users []User
 	users, err := userController.UserDao.FindAll()
@@ -34,4 +40,15 @@ func (userController *UserController) GetAllUsers(w http.ResponseWriter, r *http
 		utils.RespondWithJson(w, http.StatusBadRequest, "Empty data.")
 	}
 	utils.RespondWithJson(w, http.StatusOK, users)
+}
+
+func (userController *UserController) GetUserByID(w http.ResponseWriter, r *http.Request) {
+	var user User
+	params := mux.Vars(r)
+	user, err := userController.UserDao.FindById(string(params["id"]))
+
+	if err != nil {
+		utils.Re
+	}
+
 }
