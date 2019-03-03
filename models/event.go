@@ -1,7 +1,7 @@
 package models
 
 type Event struct {
-	ID           uint   `json:"id,omitempty"`
+	Id           uint   `json:"id,omitempty"`
 	Title        string `json:"title,omitempty"`
 	Des          string `json:"des,omitempty"`
 	AvatarUrl    string `json:"avatarUrl,omitempty"`

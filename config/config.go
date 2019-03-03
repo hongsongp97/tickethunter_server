@@ -8,6 +8,8 @@ import (
 
 // Represents database server and credentials
 type Config struct {
+	Host     string
+	Port     string
 	Server   string
 	Database string
 }
