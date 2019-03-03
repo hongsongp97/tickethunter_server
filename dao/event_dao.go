@@ -20,9 +20,10 @@ const (
 	EVENT_COLLECTION = "event"
 )
 
-func (eventDao *EventDao) Init() {
+func (eventDao *EventDao) Init(dao *Dao) {
 	log.SetFlags(log.Lshortfile)
 
+	eventDao.Dao = dao
 	eventDao.Collection = eventDao.Dao.DatabaseHandle.Collection(EVENT_COLLECTION)
 }
 

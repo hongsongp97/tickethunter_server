@@ -17,9 +17,9 @@ type EventController struct {
 // Init() func initializes UserDao of EventController, to access DB.
 // Must call this func before using any other methods.
 func (eventController *EventController) Init(dao *Dao) {
-	var eventDao = EventDao{Dao: dao}
-	eventController.eventDao = eventDao
-	eventController.eventDao.Init()
+	// var eventDao = EventDao{Dao: dao}
+	// eventController.eventDao = eventDao
+	eventController.eventDao.Init(dao)
 }
 
 func (eventController *EventController) GetEventById(w http.ResponseWriter, r *http.Request) {
