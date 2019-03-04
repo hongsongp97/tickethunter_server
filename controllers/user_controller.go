@@ -34,12 +34,13 @@ func (userController *UserController) GetAllUsers(w http.ResponseWriter, r *http
 	var users []User
 	users, err := userController.UserDao.FindAll()
 	if err != nil {
-		utils.RespondWithJson(w, http.StatusBadRequest, "Cannot get users data!")
+		utils.RespondWithError(w, http.StatusBadRequest, "Cannot get users data!")
 		log.Println(err)
 		return
 	}
 	if len(users) == 0 {
 		utils.RespondWithJson(w, http.StatusBadRequest, "Empty data.")
+		return
 	}
 	utils.RespondWithJson(w, http.StatusOK, users)
 }

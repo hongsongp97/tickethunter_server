@@ -12,4 +12,9 @@ func SetEventRouter(r *Router, dao *Dao) {
 	eventController.Init(dao)
 
 	r.HandleFunc("/event/{id}", eventController.GetEventById).Methods("GET")
+	r.HandleFunc("/event", eventController.GetEvents).Methods("GET")
+	r.HandleFunc("/event", eventController.CreateEvent).Methods("POST")
+	r.HandleFunc("/event", eventController.UpdateEvent).Methods("PUT")
+	r.HandleFunc("/event/{id}", eventController.DeleteEvent).Methods("DELETE")
+
 }
