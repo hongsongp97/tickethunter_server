@@ -119,3 +119,47 @@ func (eventController *EventController) DeleteEvent(w http.ResponseWriter, r *ht
 	}
 	utils.RespondWithJson(w, http.StatusOK, "Deleted event successfuly!")
 }
+
+func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWriter, r *http.Request) {
+	var (
+		params          = mux.Vars(r)
+		userByEachEvent []UserByEachEvent
+	)
+
+	userByEachEvent, err := eventController.eventDao.FindByJoinedUser(params["id"])
+
+	switch {
+	case err != nil:
+		RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+
+	case len(userByEachEvent) == 0:
+		RespondWithJson(w, http.StatusBadRequest, "Empty data")
+	default:
+		RespondWithJson(w, http.StatusOK, userByEachEvent)
+	}
+
+	return
+
+}
+
+func (eventController *EventController) GetFollowedUserByEventId(w http.ResponseWriter, r *http.Request) {
+	var (
+		params          = mux.Vars(r)
+		userByEachEvent []UserByEachEvent
+	)
+
+	userByEachEvent, err := eventController.eventDao.FindByFollowedUser(params["id"])
+
+	switch {
+	case err != nil:
+		RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+
+	case len(userByEachEvent) == 0:
+		RespondWithJson(w, http.StatusBadRequest, "Empty data")
+	default:
+		RespondWithJson(w, http.StatusOK, userByEachEvent)
+	}
+
+	return
+
+}

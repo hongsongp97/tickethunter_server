@@ -85,6 +85,82 @@ func (eventDao *EventDao) FindById(id string) (Event, error) {
 	return event, nil
 }
 
+func (eventDao *EventDao) FindByJoinedUser(id string) ([]UserByEachEvent, error) {
+	var (
+		userByEachEvent []UserByEachEvent
+		joinedUsers     []string
+		event           Event
+	)
+	ctx := context.Background()
+
+	cur, err := eventDao.Collection.Find(ctx, bson.M{"_id": id})
+	if err != nil {
+		log.Print("Event dao - FindByJoinedUser: " + err.Error())
+		return userByEachEvent, err
+	}
+	defer cur.Close(context.Background())
+
+	if cur.Next(ctx) {
+		if err := cur.Decode(&event); err != nil {
+			log.Print("Event dao - FindByJoinedUser: " + err.Error())
+			return userByEachEvent, err
+		}
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Print("Event dao - FindByJoinedUser: " + err.Error())
+		return userByEachEvent, err
+	}
+
+	joinedUsers = event.JoinedUsers
+	for _, joinedUser := range joinedUsers {
+		var id UserByEachEvent
+		log.Println("joinedUser: " + (string)(joinedUser))
+		id.Id = (string)(joinedUser)
+		userByEachEvent = append(userByEachEvent, id)
+	}
+
+	return userByEachEvent, err
+}
+
+func (eventDao *EventDao) FindByFollowedUser(id string) ([]UserByEachEvent, error) {
+	var (
+		userByEachEvent []UserByEachEvent
+		followedUsers   []string
+		event           Event
+	)
+	ctx := context.Background()
+
+	cur, err := eventDao.Collection.Find(ctx, bson.M{"_id": id})
+	if err != nil {
+		log.Print("Event dao - FindByFollowedUser: " + err.Error())
+		return userByEachEvent, err
+	}
+	defer cur.Close(context.Background())
+
+	if cur.Next(ctx) {
+		if err := cur.Decode(&event); err != nil {
+			log.Print("Event dao - FindByFollowedUser: " + err.Error())
+			return userByEachEvent, err
+		}
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Print("Event dao - FindByFollowedUser: " + err.Error())
+		return userByEachEvent, err
+	}
+
+	followedUsers = event.FollowedUsers
+	for _, followedUser := range followedUsers {
+		var id UserByEachEvent
+		log.Println("joinedUser: " + (string)(followedUser))
+		id.Id = (string)(followedUser)
+		userByEachEvent = append(userByEachEvent, id)
+	}
+
+	return userByEachEvent, err
+}
+
 // Insert a user into database
 func (eventDao *EventDao) Insert(event Event) error {
 	res, err := eventDao.Collection.InsertOne(context.Background(), event)
