@@ -161,7 +161,39 @@ func (eventDao *EventDao) FindByFollowedUser(id string) ([]UserByEachEvent, erro
 	return userByEachEvent, err
 }
 
-// Insert a user into database
+func (eventDao *EventDao) FindByCategoryId(key string) ([]Event, error) {
+	var (
+		events []Event
+		event  Event
+	)
+
+	ctx := context.Background()
+
+	cur, err := eventDao.Collection.Find(ctx, bson.D{{"category", key}})
+
+	if err != nil {
+		log.Print("Event dao - FindByCategoryId: " + err.Error())
+		return events, err
+	}
+	defer cur.Close(context.Background())
+
+	for cur.Next(ctx) {
+		if err := cur.Decode(&event); err != nil {
+			log.Print("Event dao - FindByCategoryId: " + err.Error())
+			return events, err
+		}
+		events = append(events, event)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Print("Event dao - FindByCategoryId: " + err.Error())
+		return events, err
+	}
+
+	return events, err
+}
+
+// Insert a event into database
 func (eventDao *EventDao) Insert(event Event) error {
 	res, err := eventDao.Collection.InsertOne(context.Background(), event)
 	if err != nil {
@@ -173,7 +205,7 @@ func (eventDao *EventDao) Insert(event Event) error {
 	return err
 }
 
-// Delete an existing user
+// Delete an existing event
 func (eventDao *EventDao) Delete(eventId string) error {
 	ctx := context.Background()
 	res, err := eventDao.Collection.DeleteOne(ctx, bson.M{"_id": eventId})
@@ -186,7 +218,7 @@ func (eventDao *EventDao) Delete(eventId string) error {
 	return err
 }
 
-// Update an existing user
+// Update an existing event
 func (eventDao *EventDao) Update(event Event) error {
 	ctx := context.Background()
 

@@ -18,4 +18,5 @@ func SetEventRouter(r *Router, dao *Dao) {
 	r.HandleFunc("/event/{id}", eventController.DeleteEvent).Methods("DELETE")
 	r.HandleFunc("/event/joined/{id}", eventController.GetJoinedUserByEventId).Methods("GET")
 	r.HandleFunc("/event/followed/{id}", eventController.GetFollowedUserByEventId).Methods("GET")
+	r.HandleFunc("/event/category/{id}", eventController.GetEventByCategoryId).Methods("GET")
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -45,6 +46,7 @@ func (eventController *EventController) GetEventById(w http.ResponseWriter, r *h
 	RespondWithJson(w, http.StatusOK, event)
 }
 
+//Get All Event
 func (eventController *EventController) GetEvents(w http.ResponseWriter, r *http.Request) {
 	var (
 		events []Event
@@ -66,6 +68,7 @@ func (eventController *EventController) GetEvents(w http.ResponseWriter, r *http
 
 }
 
+//Create Event
 func (eventController *EventController) CreateEvent(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var event Event
@@ -88,6 +91,7 @@ func (eventController *EventController) CreateEvent(w http.ResponseWriter, r *ht
 	RespondWithJson(w, http.StatusOK, "add new event succesfully!")
 }
 
+//Update Event
 func (eventController *EventController) UpdateEvent(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	var event Event
@@ -108,6 +112,7 @@ func (eventController *EventController) UpdateEvent(w http.ResponseWriter, r *ht
 
 }
 
+// Delete Event
 func (eventController *EventController) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
@@ -120,6 +125,7 @@ func (eventController *EventController) DeleteEvent(w http.ResponseWriter, r *ht
 	utils.RespondWithJson(w, http.StatusOK, "Deleted event successfuly!")
 }
 
+//Get list of User Id that already joined the Event
 func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWriter, r *http.Request) {
 	var (
 		params          = mux.Vars(r)
@@ -142,6 +148,7 @@ func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWr
 
 }
 
+//Get list of User Id that already Followed the Event
 func (eventController *EventController) GetFollowedUserByEventId(w http.ResponseWriter, r *http.Request) {
 	var (
 		params          = mux.Vars(r)
@@ -162,4 +169,27 @@ func (eventController *EventController) GetFollowedUserByEventId(w http.Response
 
 	return
 
+}
+
+// Get All Events that belong to the specify Category
+func (eventController *EventController) GetEventByCategoryId(w http.ResponseWriter, r *http.Request) {
+
+	var (
+		params = mux.Vars(r)
+		events []Event
+	)
+	log.Println("params GetEventByCategoryId :" + params["id"])
+	events, err := eventController.eventDao.FindByCategoryId(strings.ToUpper(params["id"]))
+
+	switch {
+	case err != nil:
+		RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+
+	case len(events) == 0:
+		RespondWithJson(w, http.StatusBadRequest, "Empty data")
+	default:
+		RespondWithJson(w, http.StatusOK, events)
+	}
+
+	return
 }
