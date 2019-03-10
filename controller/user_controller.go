@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/dao"
 	. "github.com/hongsongp97/tickethunter_server/model"
-	"github.com/hongsongp97/tickethunter_server/utils"
+	"github.com/hongsongp97/tickethunter_server/util"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -34,15 +34,15 @@ func (userController *UserController) GetAllUsers(w http.ResponseWriter, r *http
 	var users []User
 	users, err := userController.UserDao.FindAll()
 	if err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot get users data!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get users data!")
 		log.Println(err)
 		return
 	}
 	if len(users) == 0 {
-		utils.RespondWithJson(w, http.StatusBadRequest, "Empty data.")
+		util.RespondWithJson(w, http.StatusBadRequest, "Empty data.")
 		return
 	}
-	utils.RespondWithJson(w, http.StatusOK, users)
+	util.RespondWithJson(w, http.StatusOK, users)
 }
 
 // GetUserById() is used to get a user record by it's ID.
@@ -51,11 +51,11 @@ func (userController *UserController) GetUserById(w http.ResponseWriter, r *http
 	log.Println(params["id"])
 	user, err := userController.UserDao.FindById(params["id"])
 	if err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot get user data!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get user data!")
 		log.Println(err)
 		return
 	}
-	utils.RespondWithJson(w, http.StatusOK, user)
+	util.RespondWithJson(w, http.StatusOK, user)
 }
 
 // AddUser() is used to create a user record.
@@ -63,7 +63,7 @@ func (userController *UserController) AddUser(w http.ResponseWriter, r *http.Req
 	defer r.Body.Close()
 	var user User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot add new user, invalid input!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot add new user, invalid input!")
 		log.Println(err)
 		return
 	}
@@ -71,11 +71,11 @@ func (userController *UserController) AddUser(w http.ResponseWriter, r *http.Req
 		user.Id = bson.NewObjectId().Hex()
 	}
 	if err := userController.UserDao.Insert(user); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot add new user!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot add new user!")
 		log.Println(err)
 		return
 	}
-	utils.RespondWithJson(w, http.StatusOK, "Add new user successfuly!")
+	util.RespondWithJson(w, http.StatusOK, "Add new user successfuly!")
 }
 
 // DeleteUserById() is used to delete a user record by it's ID.
@@ -83,16 +83,16 @@ func (userController *UserController) DeleteUserById(w http.ResponseWriter, r *h
 	defer r.Body.Close()
 	var userId UserIdJson
 	if err := json.NewDecoder(r.Body).Decode(&userId); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot delete user, invalid input!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete user, invalid input!")
 		log.Println(err)
 		return
 	}
 	if err := userController.UserDao.Delete(userId.Value); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot delete user!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete user!")
 		log.Println(err)
 		return
 	}
-	utils.RespondWithJson(w, http.StatusOK, "Deleted user successfuly!")
+	util.RespondWithJson(w, http.StatusOK, "Deleted user successfuly!")
 }
 
 // UpdateUser() is used to update a user record by it's ID.
@@ -100,15 +100,15 @@ func (userController *UserController) UpdateUser(w http.ResponseWriter, r *http.
 	defer r.Body.Close()
 	var user User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot update user, invalid input!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot update user, invalid input!")
 		log.Println(err)
 		return
 	}
 	log.Println(user)
 	if err := userController.UserDao.Update(user); err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Cannot update user!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot update user!")
 		log.Println(err)
 		return
 	}
-	utils.RespondWithJson(w, http.StatusOK, "Updated user successfuly!")
+	util.RespondWithJson(w, http.StatusOK, "Updated user successfuly!")
 }

@@ -6,6 +6,7 @@ type Event struct {
 	Description   string   `bson:"description" json:"description"`
 	AvatarUrl     string   `bson:"avatar_url" json:"avatar_url"`
 	Location      string   `bson:"location" json:"location"`
+	Email         string   `bson:"email" json:"email"`
 	Category      string   `bson:"category" json:"category"`
 	ImageUrl      []string `bson:"image_url" json:"image_url"`
 	OwnerId       string   `bson:"own_id" json:"own_id"`
