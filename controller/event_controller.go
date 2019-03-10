@@ -21,8 +21,6 @@ type EventController struct {
 // Init() func initializes UserDao of EventController, to access DB.
 // Must call this func before using any other methods.
 func (eventController *EventController) Init(dao *Dao) {
-	// var eventDao = EventDao{Dao: dao}
-	// eventController.eventDao = eventDao
 	eventController.eventDao.Init(dao)
 }
 
@@ -38,7 +36,7 @@ func (eventController *EventController) GetEventById(w http.ResponseWriter, r *h
 
 	// handle with error
 	if err != nil {
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 		return
 	}
 	util.RespondWithJson(w, http.StatusOK, event)
@@ -81,7 +79,7 @@ func (eventController *EventController) CreateEvent(w http.ResponseWriter, r *ht
 		event.Id = bson.NewObjectId().Hex()
 	}
 	if err := eventController.eventDao.Insert(event); err != nil {
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot add new event!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot add new event! \n"+err.Error())
 		log.Println("Create Event Error:" + err.Error())
 		return
 	}
@@ -95,7 +93,7 @@ func (eventController *EventController) UpdateEvent(w http.ResponseWriter, r *ht
 	var event Event
 
 	if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot update event! Invaild input!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot update event! Invaild input! \n"+err.Error())
 		log.Println("Update Event Error:" + err.Error())
 		return
 	}
@@ -116,7 +114,7 @@ func (eventController *EventController) DeleteEvent(w http.ResponseWriter, r *ht
 	defer r.Body.Close()
 	var params = mux.Vars(r)
 	if err := eventController.eventDao.Delete(params["id"]); err != nil {
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete event!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete event! \n"+err.Error())
 		log.Println("Delete Event Error:" + err.Error())
 		return
 	}
@@ -134,7 +132,7 @@ func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWr
 
 	switch {
 	case err != nil:
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 
 	case len(userByEachEvent) == 0:
 		util.RespondWithJson(w, http.StatusBadRequest, "Empty data")
@@ -156,7 +154,7 @@ func (eventController *EventController) GetFollowedUserByEventId(w http.Response
 
 	switch {
 	case err != nil:
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 
 	case len(userByEachEvent) == 0:
 		util.RespondWithJson(w, http.StatusBadRequest, "Empty data")
@@ -180,7 +178,7 @@ func (eventController *EventController) GetEventByCategoryId(w http.ResponseWrit
 
 	switch {
 	case err != nil:
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 
 	case len(events) == 0:
 		util.RespondWithJson(w, http.StatusBadRequest, "Empty data")
