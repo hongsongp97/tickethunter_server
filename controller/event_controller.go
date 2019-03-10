@@ -72,7 +72,7 @@ func (eventController *EventController) CreateEvent(w http.ResponseWriter, r *ht
 	err := json.NewDecoder(r.Body).Decode(&event)
 	switch {
 	case err != nil:
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot create new event! Invaild input!")
+		util.RespondWithError(w, http.StatusBadRequest, "Cannot create new event! Invaild input! \n"+err.Error())
 		log.Println("Create Event Error:" + err.Error())
 		return
 	case event.Id == "":
