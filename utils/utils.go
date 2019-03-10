@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	. "github.com/hongsongp97/tickethunter_server/models"
+	. "github.com/hongsongp97/tickethunter_server/model"
 )
 
 // RespondWithError func to send error response with pretty-json format

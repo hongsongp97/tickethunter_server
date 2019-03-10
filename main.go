@@ -7,7 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	. "github.com/hongsongp97/tickethunter_server/config"
 	. "github.com/hongsongp97/tickethunter_server/dao"
-	"github.com/hongsongp97/tickethunter_server/routers"
+	"github.com/hongsongp97/tickethunter_server/router"
 )
 
 var config = Config{}
@@ -32,9 +32,9 @@ func main() {
 	dao.ConnectToDB()
 	defer dao.Disconnect()
 
-	// Set routers
-	routers.SetUserRouter(route, &dao)
-	routers.SetEventRouter(route, &dao)
+	// Set router
+	router.SetUserRouter(route, &dao)
+	router.SetEventRouter(route, &dao)
 
 	if err := http.ListenAndServe(config.Host+config.Port, route); err != nil {
 		log.Fatal(err)

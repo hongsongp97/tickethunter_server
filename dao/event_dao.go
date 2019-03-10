@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	. "github.com/hongsongp97/tickethunter_server/models"
+	. "github.com/hongsongp97/tickethunter_server/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
