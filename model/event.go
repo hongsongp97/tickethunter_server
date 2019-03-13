@@ -18,6 +18,4 @@ type Event struct {
 	FollowedUsers []string `bson:"followed_users" json:"followed_users"`
 }
 
-type UserByEachEvent struct {
-	Id string `bson:"_id,omitempty" json:"id,omitempty"`
-}
+

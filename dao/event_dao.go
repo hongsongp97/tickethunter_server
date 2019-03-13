@@ -85,9 +85,10 @@ func (eventDao *EventDao) FindById(id string) (Event, error) {
 	return event, nil
 }
 
-func (eventDao *EventDao) FindByJoinedUser(id string) ([]UserByEachEvent, error) {
+// Find List Users that joined event
+func (eventDao *EventDao) FindByJoinedUser(id string) ([]FollowedUserList, error) {
 	var (
-		userByEachEvent []UserByEachEvent
+		followedUserList []FollowedUserList
 		joinedUsers     []string
 		event           Event
 	)
@@ -96,36 +97,37 @@ func (eventDao *EventDao) FindByJoinedUser(id string) ([]UserByEachEvent, error)
 	cur, err := eventDao.Collection.Find(ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Print("Event dao - FindByJoinedUser: " + err.Error())
-		return userByEachEvent, err
+		return followedUserList, err
 	}
 	defer cur.Close(context.Background())
 
 	if cur.Next(ctx) {
 		if err := cur.Decode(&event); err != nil {
 			log.Print("Event dao - FindByJoinedUser: " + err.Error())
-			return userByEachEvent, err
+			return followedUserList, err
 		}
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Print("Event dao - FindByJoinedUser: " + err.Error())
-		return userByEachEvent, err
+		return followedUserList, err
 	}
 
 	joinedUsers = event.JoinedUsers
 	for _, joinedUser := range joinedUsers {
-		var id UserByEachEvent
+		var id FollowedUserList
 		log.Println("joinedUser: " + (string)(joinedUser))
 		id.Id = (string)(joinedUser)
-		userByEachEvent = append(userByEachEvent, id)
+		followedUserList = append(followedUserList, id)
 	}
 
-	return userByEachEvent, err
+	return followedUserList, err
 }
 
-func (eventDao *EventDao) FindByFollowedUser(id string) ([]UserByEachEvent, error) {
+// Find List Users that followed event
+func (eventDao *EventDao) FindByFollowedUser(id string) ([]FollowedUserList, error) {
 	var (
-		userByEachEvent []UserByEachEvent
+		followedUserList []FollowedUserList
 		followedUsers   []string
 		event           Event
 	)
@@ -134,33 +136,34 @@ func (eventDao *EventDao) FindByFollowedUser(id string) ([]UserByEachEvent, erro
 	cur, err := eventDao.Collection.Find(ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Print("Event dao - FindByFollowedUser: " + err.Error())
-		return userByEachEvent, err
+		return followedUserList, err
 	}
 	defer cur.Close(context.Background())
 
 	if cur.Next(ctx) {
 		if err := cur.Decode(&event); err != nil {
 			log.Print("Event dao - FindByFollowedUser: " + err.Error())
-			return userByEachEvent, err
+			return followedUserList, err
 		}
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Print("Event dao - FindByFollowedUser: " + err.Error())
-		return userByEachEvent, err
+		return followedUserList, err
 	}
 
 	followedUsers = event.FollowedUsers
 	for _, followedUser := range followedUsers {
-		var id UserByEachEvent
+		var id FollowedUserList
 		log.Println("joinedUser: " + (string)(followedUser))
 		id.Id = (string)(followedUser)
-		userByEachEvent = append(userByEachEvent, id)
+		followedUserList = append(followedUserList, id)
 	}
 
-	return userByEachEvent, err
+	return followedUserList, err
 }
 
+// Find Event By Specific Category 
 func (eventDao *EventDao) FindByCategoryId(key string) ([]Event, error) {
 	var (
 		events []Event

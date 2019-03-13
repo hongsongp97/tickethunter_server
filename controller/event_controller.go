@@ -125,19 +125,19 @@ func (eventController *EventController) DeleteEvent(w http.ResponseWriter, r *ht
 func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWriter, r *http.Request) {
 	var (
 		params          = mux.Vars(r)
-		userByEachEvent []UserByEachEvent
+		followedUserList []FollowedUserList
 	)
 
-	userByEachEvent, err := eventController.eventDao.FindByJoinedUser(params["id"])
+	followedUserList, err := eventController.eventDao.FindByJoinedUser(params["id"])
 
 	switch {
 	case err != nil:
 		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 
-	case len(userByEachEvent) == 0:
+	case len(followedUserList) == 0:
 		util.RespondWithJson(w, http.StatusBadRequest, "Empty data")
 	default:
-		util.RespondWithJson(w, http.StatusOK, userByEachEvent)
+		util.RespondWithJson(w, http.StatusOK, followedUserList)
 	}
 
 	return
@@ -147,19 +147,19 @@ func (eventController *EventController) GetJoinedUserByEventId(w http.ResponseWr
 func (eventController *EventController) GetFollowedUserByEventId(w http.ResponseWriter, r *http.Request) {
 	var (
 		params          = mux.Vars(r)
-		userByEachEvent []UserByEachEvent
+		followedUserList []FollowedUserList
 	)
 
-	userByEachEvent, err := eventController.eventDao.FindByFollowedUser(params["id"])
+	followedUserList, err := eventController.eventDao.FindByFollowedUser(params["id"])
 
 	switch {
 	case err != nil:
 		util.RespondWithError(w, http.StatusBadRequest, "Cannot get data. \n"+err.Error())
 
-	case len(userByEachEvent) == 0:
+	case len(followedUserList) == 0:
 		util.RespondWithJson(w, http.StatusBadRequest, "Empty data")
 	default:
-		util.RespondWithJson(w, http.StatusOK, userByEachEvent)
+		util.RespondWithJson(w, http.StatusOK, followedUserList)
 	}
 
 	return
