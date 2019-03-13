@@ -81,13 +81,15 @@ func (userController *UserController) AddUser(w http.ResponseWriter, r *http.Req
 // DeleteUserById() is used to delete a user record by it's ID.
 func (userController *UserController) DeleteUserById(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	var userId UserIdJson
-	if err := json.NewDecoder(r.Body).Decode(&userId); err != nil {
-		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete user, invalid input!")
-		log.Println(err)
-		return
-	}
-	if err := userController.UserDao.Delete(userId.Value); err != nil {
+	// var userId UserIdJson
+
+	var params = mux.Vars(r)
+	// if err := json.NewDecoder(r.Body).Decode(&userId); err != nil {
+	// 	util.RespondWithError(w, http.StatusBadRequest, "Cannot delete user, invalid input!")
+	// 	log.Println(err)
+	// 	return
+	// }
+	if err := userController.UserDao.Delete(params["id"]); err != nil {
 		util.RespondWithError(w, http.StatusBadRequest, "Cannot delete user!")
 		log.Println(err)
 		return

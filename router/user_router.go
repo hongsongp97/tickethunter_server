@@ -15,6 +15,6 @@ func SetUserRouter(r *Router, dao *Dao) {
 	r.HandleFunc("/user", userController.GetAllUsers).Methods("GET")
 	r.HandleFunc("/user", userController.AddUser).Methods("POST")
 	r.HandleFunc("/user", userController.UpdateUser).Methods("PUT")
-	r.HandleFunc("/user", userController.DeleteUserById).Methods("DELETE")
+	r.HandleFunc("/user/{id}", userController.DeleteUserById).Methods("DELETE")
 	r.HandleFunc("/user/{id}", userController.GetUserById).Methods("GET")
 }
