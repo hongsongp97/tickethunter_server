@@ -62,7 +62,7 @@ func (eventDao *EventDao) FindById(id string) (Event, error) {
 	var event Event
 	ctx := context.Background()
 
-	cur, err := eventDao.Collection.Find(ctx, bson.D{})
+	cur, err := eventDao.Collection.Find(ctx, bson.M{"_id": id})
 	if err != nil {
 		log.Println(err)
 		return event, err
@@ -89,8 +89,8 @@ func (eventDao *EventDao) FindById(id string) (Event, error) {
 func (eventDao *EventDao) FindByJoinedUser(id string) ([]FollowedUserList, error) {
 	var (
 		followedUserList []FollowedUserList
-		joinedUsers     []string
-		event           Event
+		joinedUsers      []string
+		event            Event
 	)
 	ctx := context.Background()
 
@@ -128,8 +128,8 @@ func (eventDao *EventDao) FindByJoinedUser(id string) ([]FollowedUserList, error
 func (eventDao *EventDao) FindByFollowedUser(id string) ([]FollowedUserList, error) {
 	var (
 		followedUserList []FollowedUserList
-		followedUsers   []string
-		event           Event
+		followedUsers    []string
+		event            Event
 	)
 	ctx := context.Background()
 
@@ -163,7 +163,7 @@ func (eventDao *EventDao) FindByFollowedUser(id string) ([]FollowedUserList, err
 	return followedUserList, err
 }
 
-// Find Event By Specific Category 
+// Find Event By Specific Category
 func (eventDao *EventDao) FindByCategoryId(key string) ([]Event, error) {
 	var (
 		events []Event
